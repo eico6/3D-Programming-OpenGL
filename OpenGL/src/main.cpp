@@ -62,5 +62,6 @@ int main(void)
     glDeleteProgram(myApplication->getShader());
 
     glfwTerminate();
-    return 0;
+    delete myApplication;
+    return 0; // REMEMBER TO DELETE DYNAMICALLY ALLOCATED MEMORY
 }

@@ -1,33 +1,26 @@
 #include <GL/glew.h> 
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+
 #include "Application.h"
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
 
 Application::Application()
-    : mShader{0}, mIncrement{0.05f}, mUniformLoc{0}, mVBO{0}, mIBO{0}, mVAO{0}
+    : m_Shader{0}, m_Increment{0.05f}, m_UniformLoc{0}, va{nullptr}, vb{nullptr}, ib{nullptr}
 {
 
 }
 
-void Application::GLClearError()
+Application::~Application()
 {
-    // glGetError() will "pop" the last error off the "error queue"
-    while (glGetError() != GL_NO_ERROR);
-}
-
-bool Application::GLLogCall(const char* function, const char* file, int line)
-{
-    // glDebugMessageCallback() is much better way of handling errors in OpenGL
-    // GLenum is what glGetError() returns, which is equal to an 'unsigned int'
-    while (GLenum error = glGetError())
-    {
-        std::cout << "[OpenGL Error] (" << error << "): " << function << " " << file << " - line:" << line << std::endl;
-        return false;
-    }
-
-    return true;
+    delete vb;
+    delete ib;
 }
 
 Application::ShaderProgramSource Application::ParseShader(const std::string& filepath)
@@ -138,46 +131,15 @@ void Application::init()
         2, 3, 0
     };
 
-    // --- VERTEX ARRAY ---
-    CALL(glGenVertexArrays(1, &mVAO));
-    CALL(glBindVertexArray(mVAO));
-
     // --- VERTEX BUFFER ---
-    CALL(glGenBuffers(1, &mVBO));              // Generate '1' buffer with an ID of 'bufferId'
-    CALL(glBindBuffer(GL_ARRAY_BUFFER, mVBO)); // "Place" this buffer at the 'GL_ARRAY_BUFFER' slot (used by vertex buffers)
-
-    // Fill up buffer bound at slot 'GL_ARRAY_BUFFER' with the contents of 'positions'.
-    CALL(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
-
-    // Enables the attribute at index 0. Disabled attributes will not be used during redering (default)!
-    CALL(glEnableVertexAttribArray(0));  
-
-    // Tells the GPU how to interpret the data stored in the selected buffer.
-    // This information is stored in the current Vertex Array Object (VAO),
-    // so it's THIS function that links/connects the buffer stored at 'GL_ARRAY_BUFFER' (VBO) with the current VAO.
-    // The function defines only one attribute in the vertex!
-    // @index      - The attribute you are defining.
-    //               E.g. 0 = position, 1 = color and 2 = UV.
-    // @size       - How many objects define this attribute? (not bytes)
-    //               E.g. '3' for a 3D vector containing 3 floats.
-    // @type       - The type of data the attribute consists of.
-    // @normalized - If you want OpenGL to normalize the value for you.
-    //               E.g. normalize a (0 - 255) value into a (0 - 1) value.
-    // @stride     - The total size of a whole vertex (in bytes).
-    //               E.g. a vertex made up of 3 attributes:
-    //               position, color and UV = 12 + 8 + 8 = 28 bytes. 
-    // @pointer    - Offset from the start of the vertex to current attribute (in bytes).
-    //               E.g. '20' if we were defining a UV attribute where there are
-    //               first 12 bytes of position attribute and then 8 bytes of color attribute.
-    //               Just remember to cast it like this: (const void*)20 
-    CALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
+    vb = new VertexBuffer(positions, 4 * 2 * sizeof(float));
+    
+    VertexBufferLayout layout;
+    layout.Push<float>(2);
+    va->AddBuffer(*vb, layout); // dereferenced!!!!
 
     // --- INDEX BUFFER ---
-    CALL(glGenBuffers(1, &mIBO));
-
-    // Bind the buffer at the 'GL_ELEMENT_ARRAY_BUFFER' slot (which is used for index buffers)
-    CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO)); 
-    CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
+    ib = new IndexBuffer(indices, 6);
 
     // --- SHADERS ---
     // Fill up 'source' with the source code of the shaders.
@@ -186,17 +148,17 @@ void Application::init()
     //                         at index 0 in your vertex buffer (in this case, the position attribute).
     //                         'position' has to be of type vec4, so it casts it implicitly.
     ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
-    mShader = CreateShader(source.VertexSource, source.FragmentSource);
-    CALL(glUseProgram(mShader));
+    m_Shader = CreateShader(source.VertexSource, source.FragmentSource);
+    CALL(glUseProgram(m_Shader));
 
     // --- UNIFORMS ---
     // After binding the program, I send the following values to the shader using a uniform.
-    CALL(mUniformLoc = glGetUniformLocation(mShader, "u_Color"));
-    ASSERT(mUniformLoc != -1); // Just check that it found it.
-    CALL(glUniform4f(mUniformLoc, 0.0f, 0.3f, 0.8f, 1.0f)); // ...4f = 4 floats = vec4
+    CALL(m_UniformLoc = glGetUniformLocation(m_Shader, "u_Color"));
+    ASSERT(m_UniformLoc != -1); // Just check that it found it.
+    CALL(glUniform4f(m_UniformLoc, 0.0f, 0.3f, 0.8f, 1.0f)); // ...4f = 4 floats = vec4
 
     // Unbind everything
-    CALL(glBindVertexArray(0));
+    va->Unbind();
     CALL(glUseProgram(0));
     CALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
     CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
@@ -206,11 +168,11 @@ void Application::render()
 {
     static float r{0.0f};
 
-    CALL(glUseProgram(mShader));
-    CALL(glUniform4f(mUniformLoc, r, 0.3f, 0.8f, 1.0f));
+    CALL(glUseProgram(m_Shader));
+    CALL(glUniform4f(m_UniformLoc, r, 0.3f, 0.8f, 1.0f));
 
-    CALL(glBindVertexArray(mVAO));
-    CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO));
+    va->Bind();
+    ib->Bind();
 
     // glDrawArrays()   uses the buffer that is bound at slot 'GL_ARRAY_BUFFER'         = Vertex buffer
     // glDrawElements() uses the buffer that is bound at slot 'GL_ELEMENT_ARRAY_BUFFER' = Index buffer
@@ -218,9 +180,9 @@ void Application::render()
 
     // Color cycle calculation
     if (r > 1.0f)
-        mIncrement = -0.01f;
+        m_Increment = -0.01f;
     if (r < 0.0f)
-        mIncrement =  0.01f;
-    r += mIncrement;
+        m_Increment =  0.01f;
+    r += m_Increment;
 }
 
