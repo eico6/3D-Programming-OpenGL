@@ -1,11 +1,4 @@
 ﻿  Application.cpp
-  main.cpp
   VertexArray.cpp
-C:\Visual Studio Projects\OpenGL\OpenGL\src\VertexArray.cpp(18,46): error C3867: 'VertexBufferLayout::GetElements': non-standard syntax; use '&' to create a pointer to member
-C:\Visual Studio Projects\OpenGL\OpenGL\src\VertexArray.cpp(18,26): error C2530: 'elements': references must be initialized
-C:\Visual Studio Projects\OpenGL\OpenGL\src\VertexArray.cpp(20,42): error C3536: 'elements': cannot be used before it is initialized
-C:\Visual Studio Projects\OpenGL\OpenGL\src\VertexArray.cpp(22,41): error C2109: subscript requires array or pointer type
-C:\Visual Studio Projects\OpenGL\OpenGL\src\VertexArray.cpp(22,29): error C2530: 'element': references must be initialized
-C:\Visual Studio Projects\OpenGL\OpenGL\src\VertexArray.cpp(44,9): error C3536: 'element': cannot be used before it is initialized
-C:\Visual Studio Projects\OpenGL\OpenGL\src\VertexArray.cpp(44,9): error C2198: 'PFNGLVERTEXATTRIBPOINTERPROC': too few arguments for call
   Generating Code...
+  OpenGL.vcxproj -> C:\Visual Studio Projects\OpenGL\OpenGL\bin\Win32\Debug\OpenGL.exe
