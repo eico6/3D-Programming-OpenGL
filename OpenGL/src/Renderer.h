@@ -2,6 +2,10 @@
 
 #include <Gl/glew.h>
 
+#include "VertexArray.h"
+#include "IndexBuffer.h"
+#include "Shader.h"
+
 // 'ASSERT(x)' will be replaced with 'if (!(x)) __debugbreak();' at compilation.
 // '__debugbreak()' is compiler spesific code to set a break point at current line.
 #define ASSERT(x) if (!(x)) __debugbreak();
@@ -16,3 +20,10 @@
 
 void GLClearError();
 bool GLLogCall(const char* function, const char* file, int line);
+
+class Renderer
+{
+public:
+    void Clear() const;
+    void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const; 
+};

@@ -20,3 +20,19 @@ bool GLLogCall(const char* function, const char* file, int line)
 
     return true;
 }
+
+void Renderer::Clear() const
+{
+    CALL(glClear(GL_COLOR_BUFFER_BIT));
+}
+
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const
+{
+    shader.Bind();
+    va.Bind();
+    ib.Bind();
+
+    // glDrawArrays()   uses the buffer that is bound at slot 'GL_ARRAY_BUFFER'         = Vertex buffer
+    // glDrawElements() uses the buffer that is bound at slot 'GL_ELEMENT_ARRAY_BUFFER' = Index buffer
+    CALL(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+}
