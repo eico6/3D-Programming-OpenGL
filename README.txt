@@ -2,7 +2,7 @@ Description
 - This is a project created with the intention to learn OpenGL.
 
 Author
-- Eivind H. Naasen
+- Eivind Hobrad Naasen
 
 Technical Data
 - IDE: QtCreator 4.13.0
