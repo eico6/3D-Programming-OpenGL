@@ -92,7 +92,7 @@ void RenderWindow::init()
 //    mMap.insert(std::pair<std::string, VisualObject*>{"trianglesurface", new TriangleSurface("trianglesurface.txt", xMin, xMax, zMin, zMax, hDelta, 1)});
 
     // insert all objects into a std::unordered_map
-    mMap.insert(std::pair<std::string, VisualObject*>{"heightmap", new Heightmap("../3Dprog21/Assets/heightmap.bmp")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"heightmap", new Heightmap("../3D-Programming-OpenGL/OpenGL-Project/Assets/heightmap.bmp")});
     mMap.insert(std::pair<std::string, VisualObject*>{"linecurve", new LineCurve("linecurve.txt", 1)});
     mMap.insert(std::pair<std::string, VisualObject*>{"beziercurve", new LineCurve("beziercurve.txt", 2)});
     mMap.insert(std::pair<std::string, VisualObject*>{"leastsquaresmethod", new LineCurve("leastsquaresmethod.txt", 3)});
@@ -113,13 +113,13 @@ void RenderWindow::init()
     mMap.insert(std::pair<std::string, VisualObject*>{"octahedronball2", new OctahedronBall(2)});
     mMap.insert(std::pair<std::string, VisualObject*>{"octahedronball3", new OctahedronBall(1)});
     mMap.insert(std::pair<std::string, VisualObject*>{"light", new Light()});
-    mMap.insert(std::pair<std::string, VisualObject*>{"suzanne", new ObjMesh("../3Dprog21/Assets/suzanne.obj")});
-    mMap.insert(std::pair<std::string, VisualObject*>{"cactus1", new ObjMesh("../3Dprog21/Assets/cactus.obj")});
-    mMap.insert(std::pair<std::string, VisualObject*>{"cactus2", new ObjMesh("../3Dprog21/Assets/cactus.obj")});
-    mMap.insert(std::pair<std::string, VisualObject*>{"cactus3", new ObjMesh("../3Dprog21/Assets/cactus.obj")});
-    mMap.insert(std::pair<std::string, VisualObject*>{"cactus4", new ObjMesh("../3Dprog21/Assets/cactus.obj")});
-    mMap.insert(std::pair<std::string, VisualObject*>{"winner", new ObjMesh("../3Dprog21/Assets/winner.obj")});
-    mMap.insert(std::pair<std::string, VisualObject*>{"camera", new ObjMesh("../3Dprog21/Assets/camera.obj")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"suzanne", new ObjMesh("../3D-Programming-OpenGL/OpenGL-Project/Assets/suzanne.obj")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"cactus1", new ObjMesh("../3D-Programming-OpenGL/OpenGL-Project/Assets/cactus.obj")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"cactus2", new ObjMesh("../3D-Programming-OpenGL/OpenGL-Project/Assets/cactus.obj")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"cactus3", new ObjMesh("../3D-Programming-OpenGL/OpenGL-Project/Assets/cactus.obj")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"cactus4", new ObjMesh("../3D-Programming-OpenGL/OpenGL-Project/Assets/cactus.obj")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"winner", new ObjMesh("../3D-Programming-OpenGL/OpenGL-Project/Assets/winner.obj")});
+    mMap.insert(std::pair<std::string, VisualObject*>{"camera", new ObjMesh("../3D-Programming-OpenGL/OpenGL-Project/Assets/camera.obj")});
     mMap.insert(std::pair<std::string, VisualObject*>{"skybox", new Skybox()});
     mMap.insert(std::pair<std::string, VisualObject*>{"pyramid", new Billboard()});
 
@@ -186,10 +186,10 @@ void RenderWindow::init()
     //Returns a pointer to the Texture class. This reads and sets up the texture for OpenGL
     //and returns the Texture ID that OpenGL uses from Texture::id()
     mTexture[0] = new Texture();
-    mTexture[1] = new Texture("../3Dprog21/Assets/dirt.bmp");
-    mTexture[2] = new Texture("../3Dprog21/Assets/stone.bmp");
-    mTexture[3] = new Texture("../3Dprog21/Assets/skybox.bmp");
-    mTexture[4] = new Texture("../3Dprog21/Assets/pyramid.bmp");
+    mTexture[1] = new Texture("../3D-Programming-OpenGL/OpenGL-Project/Assets/dirt.bmp");
+    mTexture[2] = new Texture("../3D-Programming-OpenGL/OpenGL-Project/Assets/stone.bmp");
+    mTexture[3] = new Texture("../3D-Programming-OpenGL/OpenGL-Project/Assets/skybox.bmp");
+    mTexture[4] = new Texture("../3D-Programming-OpenGL/OpenGL-Project/Assets/pyramid.bmp");
 
     //Set the textures loaded to a texture unit (also called a texture slot)
     glActiveTexture(GL_TEXTURE0);
@@ -448,13 +448,13 @@ void RenderWindow::barycentricCoordinates()
 
 void RenderWindow::compileShaders()
 {
-    mShaderProgram[PLAIN_SHADER] = new Shader("../3Dprog21/plainshader.vert", "../3Dprog21/plainshader.frag");
+    mShaderProgram[PLAIN_SHADER] = new Shader("../3D-Programming-OpenGL/OpenGL-Project/plainshader.vert", "../3D-Programming-OpenGL/OpenGL-Project/plainshader.frag");
     qDebug() << "Plain shader program id: " << mShaderProgram[PLAIN_SHADER]->getProgram();
-    mShaderProgram[TEXTURE_SHADER] = new Shader("../3Dprog21/texturevertex.vert", "../3Dprog21/texturefragment.frag");
+    mShaderProgram[TEXTURE_SHADER] = new Shader("../3D-Programming-OpenGL/OpenGL-Project/texturevertex.vert", "../3D-Programming-OpenGL/OpenGL-Project/texturefragment.frag");
     qDebug() << "Texture shader program id: " << mShaderProgram[TEXTURE_SHADER]->getProgram();
-    mShaderProgram[PHONG_SHADER] = new Shader("../3Dprog21/phongvertex.vert", "../3Dprog21/phongfragment.frag");
+    mShaderProgram[PHONG_SHADER] = new Shader("../3D-Programming-OpenGL/OpenGL-Project/phongvertex.vert", "../3D-Programming-OpenGL/OpenGL-Project/phongfragment.frag");
     qDebug() << "Texture shader program id: " << mShaderProgram[PHONG_SHADER]->getProgram();
-    mShaderProgram[BILLBOARD_SHADER] = new Shader("../3Dprog21/billboardshader.vert", "../3Dprog21/billboardshader.frag");
+    mShaderProgram[BILLBOARD_SHADER] = new Shader("../3D-Programming-OpenGL/OpenGL-Project/billboardshader.vert", "../3D-Programming-OpenGL/OpenGL-Project/billboardshader.frag");
     qDebug() << "Texture shader program id: " << mShaderProgram[BILLBOARD_SHADER]->getProgram();
 }
 
