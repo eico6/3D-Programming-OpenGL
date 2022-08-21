@@ -8,6 +8,7 @@
 - Author: Eivind Hobrad Naasen
 - Date: May 3rd, 2021
 - IDE: QtCreator 4.13.0
+- Framework: Qt Framework
 - Language: C++17 and GLSL
 - Rendering API: OpenGL 4.6
 
