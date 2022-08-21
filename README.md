@@ -9,7 +9,7 @@
 - Date: May 3rd, 2021
 - IDE: QtCreator 4.13.0
 - Language: C++17 and GLSL
-- API: OpenGL 4.6
+- Rendering API: OpenGL 4.6
 
 ## Preview
 ![](OpenGL_preview.gif)
